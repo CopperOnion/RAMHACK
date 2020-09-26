@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import axios from 'axios';
-
-require("dotenv").config();
+const dotenv = require('dotenv');
 
 
 function App() {
@@ -11,10 +10,9 @@ function App() {
 
 
   useEffect(() => {
-    const GCLOUD = process.env.GCLOUD_KEY
-    console.log(GCLOUD)
+    const GCLOUD = process.env.REACT_APP_GCLOUD_KEY
     const proxyurl = "https://cors-anywhere.herokuapp.com/"; 
-    const url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=Museum+in+New+york&key=AIzaSyA9AAUYT6sm1_2znZwljF2ddRQyFBKGx-M`;
+    const url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=Museum+in+New+york&key=${GCLOUD}`;
     fetch(proxyurl+url,{
       method: 'GET', // *GET, POST, PUT, DELETE, etc.
       headers: {

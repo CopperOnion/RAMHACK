@@ -1,33 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import axios from 'axios';
-const dotenv = require('dotenv');
-
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
+import Main from './pages/Main'
+import About from './pages/About'
 
 function App() {
-  const [data, setData] = useState({ hits: [] });
-
-
-  useEffect(() => {
-    const GCLOUD = process.env.REACT_APP_GCLOUD_KEY
-    const proxyurl = "https://cors-anywhere.herokuapp.com/"; 
-    const url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=Museum+in+New+york&key=${GCLOUD}`;
-    fetch(proxyurl+url,{
-      method: 'GET', // *GET, POST, PUT, DELETE, etc.
-      headers: {
-        'Content-Type': 'application/json',
-      }    
-    })
-    .then(res=> res.json())
-    .then(data => console.log(data.results))
-    
-  },[]);
   
   return (
+    <Router>
+
     <div className="App">
-       Hello teammates !
+      <Switch>
+        <Route exact path="/">
+          <Main />
+        </Route>
+
+        <Route path="/about">
+          <About />
+        </Route>
+      </Switch>
     </div>
+    </Router>
   );
 }
 

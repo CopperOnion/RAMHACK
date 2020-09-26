@@ -1,4 +1,5 @@
-import React from 'react'
+import React, {useState} from 'react'
+import Button from 'react-bootstrap/Button';
 
 /**
  * Takes
@@ -6,8 +7,8 @@ import React from 'react'
  * @TODO: make it look pretty / interactable
  */
 function Location({...props}) {
-    console.log(props.data)
-    return (
+    console.log()
+   return (
         <div>
             <div className="card">
                 <div className="card-body">
@@ -15,7 +16,7 @@ function Location({...props}) {
                     <p className="card-text">{props.data.formatted_address}</p>
                     <p className="card-text">Business Status: {props.data.business_status}</p>
 
-                    <a href="#" className="btn btn-primary">Go somewhere</a>
+                    <Button onClick={()=>props.action(props.data.geometry.location)}>Go somewhere</Button>
                 </div>
             </div>
         </div>

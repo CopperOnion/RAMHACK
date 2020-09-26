@@ -6,24 +6,31 @@
 }
 
 .locationlist{
-    flex: .6;
-    padding: 0vh 2vw;
+    padding: 4vh 2vw 8vh 2vw;
     justify-content: center;
     align-items: center;
     overflow-y:auto;
     height:100vh;
-
 }
+
+.locationlist::-webkit-scrollbar {
+    display: none;
+  }
 
 .locationelement{
-    margin: 6vh 0;
+    margin-bottom: 6vh;
 }
 
-.temp{
-    flex: .8;
-    display: flex;
+.left{
+    padding: 5vw;
+    flex: .5 1;
     justify-content: center;
     align-items: center;
-    height:100vh;
-    overflow-y:auto;
+    
 }
+
+.right{
+    flex:.5;
+    margin:auto;
+}
+

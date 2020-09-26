@@ -14,6 +14,7 @@ function Location({...props}) {
                     <h5 className="card-title">{props.data.name}</h5>
                     <p className="card-text">{props.data.formatted_address}</p>
                     <p className="card-text">Business Status: {props.data.business_status}</p>
+                    <p className="card-text">Ratings: {props.data.user_ratings_total}</p>
 
                     <a href="#" className="btn btn-primary">Go somewhere</a>
                 </div>

@@ -1,6 +1,29 @@
 .main{
     display: flex;
     justify-content: center;
+    height:100vh;
+    overflow:hidden;
+}
+
+.locationlist{
+    flex: .6;
+    padding: 0vh 2vw;
+    justify-content: center;
+    align-items: center;
+    overflow-y:auto;
+    height:100vh;
+
+}
+
+.locationelement{
+    margin: 6vh 0;
+}
+
+.temp{
+    flex: .8;
+    display: flex;
+    justify-content: center;
     align-items: center;
     height:100vh;
+    overflow-y:auto;
 }

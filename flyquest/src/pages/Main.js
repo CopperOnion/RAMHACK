@@ -1,16 +1,16 @@
-import React, { useState, useEffect, useCallback} from 'react';
+import React, { useState, useEffect, useCallback, useRef} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Button from 'react-bootstrap/Button';
 import './Main.css'
 import Location from '../components/Location'
-import { GoogleMap, LoadScript } from '@react-google-maps/api';
-import HeatmapLayer from "react-google-maps/lib/components/visualization/HeatmapLayer";
+import {Map, HeatMap, Marker, GoogleApiWrapper} from 'google-maps-react';
+
 
 var _ = require('lodash');
 var states = require('us-state-codes');
 
 const dotenv = require("dotenv");
-
+const Cloudkey = process.env.REACT_APP_GCLOUD_KEY
 /**
  *  Initial configuration for google maps
  **/
@@ -26,28 +26,43 @@ const center = {
 };
 
 export const Main = () => {
+    let positions = [
+        
+    ];
+
+
     const [data, setData] = useState([]);
     const [searchquery, setSearchquery] = useState("");
-    const [Cloudkey, SetCloudkey] = useState(process.env.REACT_APP_GCLOUD_KEY)
     const [map, setMap] = React.useState(null)
     const [coviddata, setCoviddata] = useState([])
     const [usCovid, setUsCovid] = useState([])
-    const [visitors, setVisitors] = useState([])
+    const [visitors, setVisitors] = useState(positions)
+    const [visitcount, setVisitcount] = useState([])
 
-    let marker;
+    const [zoom, setZoom] = useState(2)
+    const [markerpos, setMarkerpos] = useState({lat: 37.759703, lng: -122.428093})
+    const [centerpos, setCenterpos] = useState({lat:0, lng:0})
+    const [radius, setRadius] = useState(5)
 
-    /**
-     * Functions for loading and unloading the map
+    /* Gradient for the heatmap
      */
-    const onLoad = React.useCallback(function callback(map) {
-        const bounds = new window.google.maps.LatLngBounds();
-        map.fitBounds(bounds);
-        setMap(map);
-    }, []);
-
-    const onUnmount = React.useCallback(function callback(map) {
-        setMap(null);
-    }, []);
+    
+    const gradient = [
+        "rgba(0, 255, 255, 0)",
+        "rgba(0, 255, 255, 1)",
+        "rgba(0, 191, 255, 1)",
+        "rgba(0, 127, 255, 1)",
+        "rgba(0, 63, 255, 1)",
+        "rgba(0, 0, 255, 1)",
+        "rgba(0, 0, 223, 1)",
+        "rgba(0, 0, 191, 1)",
+        "rgba(0, 0, 159, 1)",
+        "rgba(0, 0, 127, 1)",
+        "rgba(63, 0, 91, 1)",
+        "rgba(127, 0, 63, 1)",
+        "rgba(191, 0, 31, 1)",
+        "rgba(255, 0, 0, 1)",
+      ];
 
     /**
      * List of locations from the query
@@ -119,19 +134,14 @@ export const Main = () => {
      */
 
     const lookup = (e) => {
-        console.log(e);
-        if (marker) {
-            marker.setMap(null);
-        }
-
-        map.panTo(e);
-        map.setZoom(12);
-        marker = new window.google.maps.Marker({
-            position: e,
-            map: map,
-            title: "Here!",
-        });
-        marker.setMap(map);
+        setZoom(15)
+        setMarkerpos(e);
+        setCenterpos(e);
+        setRadius(20);
+        var heatmap = new window.google.maps.visualization.HeatmapLayer({
+            data: visitors
+          });
+        heatmap.setMap(map);
     }
 
     /**
@@ -150,6 +160,10 @@ export const Main = () => {
         }
     },[data]);
 
+    const receive = (e) =>{
+        visitcount.push(e)
+    }
+
     locationlist = <ul className="locationlist" >
         {data.map((e,i)=>
         (
@@ -157,6 +171,7 @@ export const Main = () => {
                 <Location
                     data = {e}
                     action = {lookup}
+                    get = {receive}
                 />
             </li>
         ))}
@@ -199,7 +214,15 @@ export const Main = () => {
         element.classList.add("searchbar_high")
 
     }
-        
+
+    
+    const Feelingsus =() =>{
+        console.log(data)
+        setData(data.filter((e,i)=>{
+            return visitcount[i] < 6
+        }))
+    }
+
     return (
         <div className="main">
             <div className="left">
@@ -227,6 +250,14 @@ export const Main = () => {
                         >
                             submit
                         </Button>
+
+                        <Button
+                            style={{ float: "left", fontSize: "14px" ,marginLeft:"20px"}}
+                            onClick={Feelingsus}
+                            className="btn btn-primary"
+                        >
+                            Feeling sus
+                        </Button>
                     </form>
                 </div>
 
@@ -234,21 +265,35 @@ export const Main = () => {
             </div>
 
             <div className="right">
-                <LoadScript googleMapsApiKey={Cloudkey}>
-                    <GoogleMap
-                        mapContainerStyle={containerStyle}
-                        center={center}
-                        zoom={1}
-                        onLoad={onLoad}
-                        onUnmount={onUnmount}
-                    >
-                        {/* <HeatmapLayer data = {visitors} /> */}
-                    </GoogleMap>
+                <div>
 
-                </LoadScript>
+          
+                    <Map 
+                        style={{ height: '80vh', width: '40%' }}
+                        className="map"
+                        google={window.google} 
+                        zoom={zoom}
+                        center={centerpos}
+                        >
+                        <Marker
+                            name={"You are here !"}
+                            position={markerpos} 
+                        />
+                        <Marker />
+                        <HeatMap
+                            gradient={gradient}
+                            positions={positions}
+                            opacity={.5}
+                            radius={radius}
+                        />
+                    </Map>
+                </div>
             </div>
         </div>
     );
 };
 
-export default Main;
+export default GoogleApiWrapper({
+    apiKey: (Cloudkey),
+    libraries: ["visualization"]
+  })(Main)

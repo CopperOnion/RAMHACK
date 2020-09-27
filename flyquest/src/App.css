@@ -1,8 +1,13 @@
 .App {
   text-align: center;
-  background-image:url("./files/cool-background.png")
+  background-image:url("./files/cool-background.png");
 }
 
 ul{
   list-style-type : none;
+}
+
+body{
+  overflow:hidden;
+
 }

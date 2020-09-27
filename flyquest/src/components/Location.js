@@ -11,7 +11,6 @@ const dotenv = require("dotenv");
  * @TODO: make it look pretty / interactable
  */
 function Location({ ...props }) {
-    console.log(props.data);
     const [photoref, setPhotoref] = useState("");
     const [visitors, setVisitors] = useState(0);
 
@@ -40,13 +39,14 @@ function Location({ ...props }) {
                     .then((doc) => {
                         const docData = doc.data();
                         setVisitors(docData.visitors);
-                    });
-            });
+                        //sends the visitor information back to the parent element
+                        props.get(docData.visitors)
+                    })
+            })
+            
     }, [props.data.formatted_address]);
     const increment = firebase.firestore.FieldValue.increment(1);
 
-function Location({...props}) {
-    const [photoref, setPhotoref] = useState("")
     
     /**
      * obtains image reference from props.data
@@ -88,7 +88,7 @@ function Location({...props}) {
                             <p className="card-text">
                                 new covid cases in region: {props.data.covid}
                             </p>
-                            <p className="card-text">
+                            <p className="card-text visitcount">
                                 visitor count: {visitors}
                             </p>
 
@@ -100,6 +100,7 @@ function Location({...props}) {
                                 Go here !
                             </Button>
                             <Button
+                                style={{marginLeft:"10px"}}
                                 onClick={() => {
                                     placesRef
                                         .doc(`${props.data.formatted_address}`)

@@ -6,7 +6,7 @@
 }
 
 .locationlist{
-    padding: 4vh 2vw 8vh 2vw;
+    padding: 2vh 2vw 8vh 2vw;
     justify-content: center;
     align-items: center;
     overflow-y:auto;
@@ -22,7 +22,7 @@
 }
 
 .left{
-    padding: 5vw;
+    padding: 3vh 5vw;
     flex: .5 1;
     justify-content: center;
     align-items: center;
@@ -34,3 +34,22 @@
     margin:auto;
 }
 
+.searchbar{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 94%;
+}
+
+form{
+    justify-content: left;
+    align-items: left;
+    width:80%;
+    transition: all .5s;
+}
+.form-group label{
+    float: left;
+}
+.form-group{
+    margin-bottom: .7rem;
+}

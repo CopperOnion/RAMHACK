@@ -31,6 +31,9 @@ export const Main = () => {
     const [map, setMap] = React.useState(null)
     const [coviddata, setCoviddata] = useState([])
     const [usCovid, setUsCovid] = useState([])
+ 
+    let marker;
+
     /**
      * Functions for loading and unloading the map 
      */
@@ -92,26 +95,57 @@ export const Main = () => {
             //Only looks at United States data
             for (let e of data){
                 if (e.country ==="United States of America"){
-                    console.log(e.region)
                     return _.chain(e.region)
                     .groupBy("subregion1")
-                    .map((e,i)=>{
-                        return _.keyBy(e)
-                    })
                     .value()
                 }
             } 
         })
-        .then(normalized=>
+        .then(normalized=>{
             //returns normalized version with states on the top of US data
-            usCovid.push(normalized)
-        )
+            /* usCovid.push(normalized) */
+            usCovid.push( _.forEach(normalized, function(value, key) {
+                normalized[key] = _.groupBy(normalized[key], function(item) {
+                    return item.subregion2
+                });
+            }))
+        })
     },[]);
 
-    /** 
-    *  Simple API call to retrieve location data on the main page
-    */
-    useEffect(() => {
+    /**
+     * Go to that specified geographical location
+     */
+
+    const lookup = (e) =>{
+        console.log(e)
+        if (marker){
+            marker.setMap(null);
+        }
+
+        map.panTo(e)
+        map.setZoom(12)
+        marker = new window.google.maps.Marker({
+            position: e,
+            map: map,
+            title: 'Here!'
+          });
+        marker.setMap(map);
+    }
+
+    locationlist = <ul className="locationlist" >
+        {data.map((e,i)=>
+        (
+            <li className="locationelement" key={i}>
+                <Location
+                    data = {e}
+                    action = {lookup}
+                />
+            </li>
+        ))}
+    </ul>
+
+    const Handlesearch = (e) =>{
+        e.preventDefault()
         const proxyurl = "https://cors-anywhere.herokuapp.com/"; 
         const url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${searchquery}&key=${Cloudkey}`;
         fetch(proxyurl+url,{
@@ -126,9 +160,12 @@ export const Main = () => {
             return (gmap.results.map((e)=>{
                 let address = e.formatted_address.split(",").map(item => item.trim())
                 let state = address[address.length- 2].split(" ").map(item => item.trim())[0]
-                e.state = state
-                e.region = address[1]
-                console.log(usCovid[0])
+                e.state = states.getStateNameByStateCode(state)
+                e.region = address[address.length-3] + " County"
+
+                if (usCovid[0][e.state] && usCovid[0][e.state][e.region]) {
+                    e.covid = (usCovid[0][e.state][e.region][0].newcases)
+                }
                 return e
                 }   
             ))
@@ -136,30 +173,7 @@ export const Main = () => {
         .then(normalized =>{
             setData(normalized)
         })
-        
-    },[searchquery]);
-
-    /**
-     * Go to that specified geographical location
-     */
-
-    const lookup = (e) =>{
-        console.log(e)
-        map.panTo(e)
-        map.setZoom(15)
     }
-
-    locationlist = <ul className="locationlist" >
-        {data.map((e,i)=>
-        (
-            <li className="locationelement" key={i}>
-                <Location
-                    data = {e}
-                    action = {lookup}
-                />
-            </li>
-        ))}
-    </ul>
         
   
 
@@ -168,10 +182,10 @@ export const Main = () => {
             <div className="left">
                 <div className="searchbar">
                     
-                    <form >
+                    <form onSubmit = {Handlesearch} >
                         <div className="form-group">
 
-                            <label >Search for places to go! </label>
+                            <label ><h2>where is your next journey?</h2></label>
 
                             <input 
                                 type="text" 
@@ -182,6 +196,9 @@ export const Main = () => {
                                 aria-describedby="emailHelp" 
                                 placeholder="Enter location"/>
                             </div>
+                            <Button style={{float:"left" , fontSize:"20px"}} type="submit" class="btn btn-primary">submit</Button>
+
+
                     </form>
                 </div>
 

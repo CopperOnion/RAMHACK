@@ -26,12 +26,14 @@
     flex: .5 1;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
+    background-color: white;
     
 }
 
 .right{
     flex:.5;
-    margin:auto;
+    margin:5vw;
 }
 
 .searchbar{
@@ -39,12 +41,20 @@
     align-items: center;
     justify-content: center;
     height: 94%;
+    transition: all .5s;
+
+}
+
+.searchbar_high{
+    height:28%;
+    transition: all .5s;
+
 }
 
 form{
     justify-content: left;
     align-items: left;
-    width:80%;
+    width:92%;
     transition: all .5s;
 }
 .form-group label{

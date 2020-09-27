@@ -173,6 +173,10 @@ export const Main = () => {
         .then(normalized =>{
             setData(normalized)
         })
+
+        var element = document.querySelector(".searchbar");
+        element.classList.add("searchbar_high")
+
     }
         
   
@@ -196,7 +200,7 @@ export const Main = () => {
                                 aria-describedby="emailHelp" 
                                 placeholder="Enter location"/>
                             </div>
-                            <Button style={{float:"left" , fontSize:"20px"}} type="submit" class="btn btn-primary">submit</Button>
+                            <Button style={{float:"left" , fontSize:"14px"}} type="submit" class="btn btn-primary">submit</Button>
 
 
                     </form>

@@ -21,7 +21,7 @@ function Location({...props}) {
             setPhotoref(props.data.photos[0].photo_reference)
         }
     
-    },[]);
+    },[props.data]);
 
     const url = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=600&photoreference=${photoref}&key=${process.env.REACT_APP_GCLOUD_KEY}`
 

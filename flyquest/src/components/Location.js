@@ -10,7 +10,6 @@ const dotenv = require('dotenv');
  * @TODO: make it look pretty / interactable
  */
 function Location({...props}) {
-    console.log(props.data)
     const [photoref, setPhotoref] = useState("")
     
     /**

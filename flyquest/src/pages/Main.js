@@ -132,6 +132,36 @@ export const Main = () => {
         marker.setMap(map);
     }
 
+    const HandlevistorHeatmap = (e) =>{
+        e.preventDefault()
+        var heatmapData = [
+            new window.google.maps.LatLng(37.782, -122.447),
+            new window.google.maps.LatLng(37.782, -122.447),
+            new window.google.maps.LatLng(37.782, -122.447),
+            new window.google.maps.LatLng(37.782, -122.447),
+            new window.google.maps.LatLng(37.782, -122.447),
+            new window.google.maps.LatLng(37.782, -122.447), 
+            new window.google.maps.LatLng(37.782, -122.447),
+            new window.google.maps.LatLng(37.782, -122.447),
+            new window.google.maps.LatLng(37.782, -122.447),
+            new window.google.maps.LatLng(37.782, -122.447),
+            new window.google.maps.LatLng(37.782, -122.447),
+            new window.google.maps.LatLng(37.782, -122.447),              
+          ];
+
+        var heatmap = new window.google.maps.visualization.HeatmapLayer({
+            data: heatmapData
+          });
+        heatmap.setMap(map);
+    }
+
+    /**
+     * Hook for changing eatmap
+     */
+    useEffect(()=>{
+        console.log(data)
+    },[data]);
+
     locationlist = <ul className="locationlist" >
         {data.map((e,i)=>
         (
@@ -179,7 +209,7 @@ export const Main = () => {
 
     }
         
-  
+   
 
     return (
         <div className="main">

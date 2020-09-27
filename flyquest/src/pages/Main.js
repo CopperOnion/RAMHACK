@@ -129,21 +129,53 @@ export const Main = () => {
             title: "Here!",
         });
         marker.setMap(map);
-    };
+    }
 
-    locationlist = (
-        <ul className="locationlist">
-            {data.map((e, i) => (
-                <li className="locationelement" key={i}>
-                    <Location data={e} action={lookup} />
-                </li>
-            ))}
-        </ul>
-    );
+    const HandlevistorHeatmap = (e) =>{
+        e.preventDefault()
+        var heatmapData = [
+            new window.google.maps.LatLng(37.782, -122.447),
+            new window.google.maps.LatLng(37.782, -122.447),
+            new window.google.maps.LatLng(37.782, -122.447),
+            new window.google.maps.LatLng(37.782, -122.447),
+            new window.google.maps.LatLng(37.782, -122.447),
+            new window.google.maps.LatLng(37.782, -122.447), 
+            new window.google.maps.LatLng(37.782, -122.447),
+            new window.google.maps.LatLng(37.782, -122.447),
+            new window.google.maps.LatLng(37.782, -122.447),
+            new window.google.maps.LatLng(37.782, -122.447),
+            new window.google.maps.LatLng(37.782, -122.447),
+            new window.google.maps.LatLng(37.782, -122.447),              
+          ];
 
-    const Handlesearch = (e) => {
-        e.preventDefault();
-        const proxyurl = "https://cors-anywhere.herokuapp.com/";
+        var heatmap = new window.google.maps.visualization.HeatmapLayer({
+            data: heatmapData
+          });
+        heatmap.setMap(map);
+    }
+
+    /**
+     * Hook for changing eatmap
+     */
+    useEffect(()=>{
+        console.log(data)
+    },[data]);
+
+    locationlist = <ul className="locationlist" >
+        {data.map((e,i)=>
+        (
+            <li className="locationelement" key={i}>
+                <Location
+                    data = {e}
+                    action = {lookup}
+                />
+            </li>
+        ))}
+    </ul>
+
+    const Handlesearch = (e) =>{
+        e.preventDefault()
+        const proxyurl = "https://cors-anywhere.herokuapp.com/"; 
         const url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${searchquery}&key=${Cloudkey}`;
         fetch(proxyurl + url, {
             method: "GET", // *GET, POST, PUT, DELETE, etc.
@@ -175,9 +207,10 @@ export const Main = () => {
             });
 
         var element = document.querySelector(".searchbar");
-        element.classList.add("searchbar_high");
-    };
+        element.classList.add("searchbar_high")
 
+    }
+        
     return (
         <div className="main">
             <div className="left">

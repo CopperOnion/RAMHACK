@@ -45,6 +45,9 @@ function Location({ ...props }) {
     }, [props.data.formatted_address]);
     const increment = firebase.firestore.FieldValue.increment(1);
 
+function Location({...props}) {
+    const [photoref, setPhotoref] = useState("")
+    
     /**
      * obtains image reference from props.data
      */

@@ -1,0 +1,36 @@
+.main{
+    display: flex;
+    justify-content: center;
+    height:100vh;
+    overflow:hidden;
+}
+
+.locationlist{
+    padding: 4vh 2vw 8vh 2vw;
+    justify-content: center;
+    align-items: center;
+    overflow-y:auto;
+    height:100vh;
+}
+
+.locationlist::-webkit-scrollbar {
+    display: none;
+  }
+
+.locationelement{
+    margin-bottom: 6vh;
+}
+
+.left{
+    padding: 5vw;
+    flex: .5 1;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+.right{
+    flex:.5;
+    margin:auto;
+}
+

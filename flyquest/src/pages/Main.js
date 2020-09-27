@@ -1,11 +1,13 @@
-import React, { useState, useEffect, useCallback } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
-import Button from "react-bootstrap/Button";
-import "./Main.css";
-import Location from "../components/Location";
-import { GoogleMap, LoadScript } from "@react-google-maps/api";
-var _ = require("lodash");
-var states = require("us-state-codes");
+import React, { useState, useEffect, useCallback} from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Button from 'react-bootstrap/Button';
+import './Main.css'
+import Location from '../components/Location'
+import { GoogleMap, LoadScript } from '@react-google-maps/api';
+import HeatmapLayer from "react-google-maps/lib/components/visualization/HeatmapLayer";
+
+var _ = require('lodash');
+var states = require('us-state-codes');
 
 const dotenv = require("dotenv");
 
@@ -26,10 +28,11 @@ const center = {
 export const Main = () => {
     const [data, setData] = useState([]);
     const [searchquery, setSearchquery] = useState("");
-    const [Cloudkey, SetCloudkey] = useState(process.env.REACT_APP_GCLOUD_KEY);
-    const [map, setMap] = React.useState(null);
-    const [coviddata, setCoviddata] = useState([]);
-    const [usCovid, setUsCovid] = useState([]);
+    const [Cloudkey, SetCloudkey] = useState(process.env.REACT_APP_GCLOUD_KEY)
+    const [map, setMap] = React.useState(null)
+    const [coviddata, setCoviddata] = useState([])
+    const [usCovid, setUsCovid] = useState([])
+    const [visitors, setVisitors] = useState([])
 
     let marker;
 
@@ -131,34 +134,20 @@ export const Main = () => {
         marker.setMap(map);
     }
 
-    const HandlevistorHeatmap = (e) =>{
-        e.preventDefault()
-        var heatmapData = [
-            new window.google.maps.LatLng(37.782, -122.447),
-            new window.google.maps.LatLng(37.782, -122.447),
-            new window.google.maps.LatLng(37.782, -122.447),
-            new window.google.maps.LatLng(37.782, -122.447),
-            new window.google.maps.LatLng(37.782, -122.447),
-            new window.google.maps.LatLng(37.782, -122.447), 
-            new window.google.maps.LatLng(37.782, -122.447),
-            new window.google.maps.LatLng(37.782, -122.447),
-            new window.google.maps.LatLng(37.782, -122.447),
-            new window.google.maps.LatLng(37.782, -122.447),
-            new window.google.maps.LatLng(37.782, -122.447),
-            new window.google.maps.LatLng(37.782, -122.447),              
-          ];
-
-        var heatmap = new window.google.maps.visualization.HeatmapLayer({
-            data: heatmapData
-          });
-        heatmap.setMap(map);
-    }
-
     /**
      * Hook for changing eatmap
      */
     useEffect(()=>{
-        console.log(data)
+        const visitors = []
+        for (let elem of data ){
+            for (let i = 0; i < 14 ;i++){
+                visitors.push(elem.geometry.location)
+
+            }
+        }
+        if(visitors.length != 0) {
+            setVisitors(visitors)
+        }
     },[data]);
 
     locationlist = <ul className="locationlist" >
@@ -252,7 +241,10 @@ export const Main = () => {
                         zoom={1}
                         onLoad={onLoad}
                         onUnmount={onUnmount}
-                    ></GoogleMap>
+                    >
+                        {/* <HeatmapLayer data = {visitors} /> */}
+                    </GoogleMap>
+
                 </LoadScript>
             </div>
         </div>
